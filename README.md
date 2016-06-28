@@ -1,29 +1,22 @@
-tornado-boilerplate -- a standard layout for Tornado apps
+tornado-boilerplate -- Tornado应用的一个标准的布局
 ===============================================================================
 
-## Description
+## 描述
 
-tornado-boilerplate is an attempt to set up an convention for
-[Tornado](http://www.tornadoweb.org/) app layouts, to assist in writing
-utilities to deploy such applications. A bit of convention can go a long way.
+tornado-boilerplate 建立一个[Tornado](http://www.tornadoweb.org/) 应用布局, 协助编写实用程序来部署这样的应用程序。
 
-This app layout is the one assumed by [buedafab](https://github.com/bueda/ops).
+这个App布局是[buedafab](https://github.com/bueda/ops)的一个假定。
 
-Tested with Tornado v3.2 
+Tornado v3.2 测试
 
-### Related Projects
+### 相关项目
 
 [buedafab](https://github.com/bueda/ops)
 [django-boilerplate](https://github.com/bueda/django-boilerplate)
 [python-webapp-etc](https://github.com/bueda/python-webapp-etc)
 [comrade](https://github.com/bueda/django-comrade)
 
-## Acknowledgements
-
-The folks at Mozilla working on the [next version of AMO](https://github.com/jbalogh/zamboni)
-were the primary inspiration for this layout.
-
-## Directory Structure
+## 目录结构
 
     tornado-boilerplate/
         handlers/
@@ -48,31 +41,23 @@ were the primary inspiration for this layout.
         app.py
         settings.py
 
-### handlers
+### handlers目录
 
-All of your Tornado RequestHandlers go in this directory.
+你的所有的 Tornado RequestHandlers 都放在这个目录下,
+当`environment.py`被导入时, 该目录下文件被加到环境变量`PYTHONPATH`中。
 
-Everything in this directory is added to the `PYTHONPATH` when the
-`environment.py` file is imported.
+### lib目录
 
-### lib
+Python包和模块,并不是真的Tornado请求处理程序。这些只是普通的Python类和方法。
+同上也被加载到`PYTHONPATH`环境变量中。
 
-Python packages and modules that aren't really Tornado request handlers. These
-are just regular Python classes and methods.
+### logconfig目录
 
-Everything in this directory is added to the `PYTHONPATH` when the
-`environment.py` file is imported.
+来自Mozilla's [zamboni](https://github.com/jbalogh/zamboni)的一个扩展版的[log_settings](https://github.com/jbalogh/zamboni/blob/master/log_settings.py)
+模块。
 
-### logconfig
+包含一个`initialize_logging` 方法 意味着从项目的`settings.py`中被调用来设置python日志系统.
 
-An extended version of the
-[log_settings](https://github.com/jbalogh/zamboni/blob/master/log_settings.py)
-module from Mozilla's [zamboni](https://github.com/jbalogh/zamboni).
-
-This package includes an `initialize_logging` method meant to be called from the
-project's `settings.py` that sets Python's logging system. The default for
-server deployments is to log to syslog, and the default for solo development is
-simply to log to the console.
 
 All of your loggers should be children of your app's root logger (defined in
 `settings.py`). This works well at the top of every file that needs logging:
@@ -80,26 +65,18 @@ All of your loggers should be children of your app's root logger (defined in
     import logging
     logger = logging.getLogger('five.' + __name__)
 
-### media
+### media目录
 
-A subfolder each for CSS, Javascript and images. Third-party files (e.g. the
-960.gs CSS or jQuery) go in a `vendor/` subfolder to keep your own code
-separate.
+每个 CSS, Javascript 和 images都对应一个子目录. 第三方文件放在 `vendor/`子文件夹来保持自己的代码分开的。
 
 ### requirements
 
-pip requirements files, optionally one for each app environment. The
-`common.txt` is installed in every case.
+pip requirements 文件, 为每个app环境选择一个。`common.txt` 通用的requirements文件,在每个环境下都会需要。
 
-Our Fabfile (see below) installs the project's dependencies from these files.
-It's an attempt to standardize the location for dependencies like Rails'
-`Gemfile`. We also specifically avoid listing the dependencies in the README of
-the project, since a list there isn't checked programmatically or ever actually
-installed, so it tends to quickly become out of date.
 
-### templates
+### templates目录
 
-Project-wide templates (i.e. those not belonging to any specific app in the
+项目的templates (i.e. those not belonging to any specific app in the
 `handlers/` folder). The boilerplate includes a `base.html` template that defines
 these blocks:
 
@@ -163,32 +140,26 @@ compilation (e.g. C/C++ extensions) this method will not work.
 
 #### environment.py
 
-Modifies the `PYTHONPATH` to allow importing from the `apps/`, `lib/` and
-`vendor/` directories. This module is imported at the top of `settings.py` to
-make sure it runs for both local development (using Django's built-in server)
-and in production (run through mod-wsgi, gunicorn, etc.).
+修改`PYTHONPATH` 允许导入`apps/`, `lib/` 和`vendor/` 目录。
+
+这个模块在`settings.py`的顶部被导入,为了确保能够在本地测试环境和生成环境下运行。
 
 #### fabfile.py
 
-We use [Fabric](http://fabfile.org/) to deploy to remote servers in development,
-staging and production environments. The boilerplate Fabfile is quite thin, as
-most of the commands are imported from [buedafab](https://github.com/bueda/ops),
-a collection of our Fabric utilities.
+使用[Fabric](http://fabfile.org/) 自动化部署。
 
 #### app.py
 
-The main Tornado application, and also a runnable file that starts the Tornado
-server.
+Tornado的主程序,也是启动程序。
 
 #### settings.py
 
-A place to collect application settings ala Django. There's undoubtedly a better
-way to do this, considering all of the flak Django is taking lately for this
-global configuration. For now, it works.
+像Django一样设置一个地方来收集应用程序配置。
 
-## Contributing
 
-If you have improvements or bug fixes:
+## 贡献
+
+如果您有改进或bug修复:
 
 * Fork the repository on GitHub
 * File an issue for the bug fix/feature request in GitHub
@@ -196,7 +167,7 @@ If you have improvements or bug fixes:
 * Push your modifications to that branch
 * Send a pull request
 
-## Authors
+## 作者
 
 * [Bueda Inc.](http://www.bueda.com)
 * Christopher Peplin, peplin@bueda.com, @[peplin](http://twitter.com/peplin)
